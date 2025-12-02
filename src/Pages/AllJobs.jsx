@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxios from '../hooks/useAxios';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { ClipLoader } from 'react-spinners';
 
 const AllJobs = () => {
     const axios = useAxios();
+    const [sortOrder, setSortOrder] = useState('asc');
 
     const getJobs = async () => {
         const res = await axios.get('/jobs');
@@ -33,9 +34,25 @@ const AllJobs = () => {
         );
     }
 
+    const sortedJobs = [...jobs].sort((a, b) => {
+        if (sortOrder === 'asc') {
+            return new Date(a.postedDate) - new Date(b.postedDate);
+        } else {
+            return new Date(b.postedDate) - new Date(a.postedDate);
+        }
+    });
+
     return (
         <div className="container mx-auto my-12">
             <h1 className="text-4xl font-bold text-center mb-8">All Jobs</h1>
+            <div className="text-center mb-4">
+                <button
+                    className="btn btn-secondary"
+                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                >
+                    Sort by Date ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
+                </button>
+            </div>
             <div className="overflow-x-auto">
                 <table className="table w-full">
                     {/* head */}
@@ -50,7 +67,7 @@ const AllJobs = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {jobs.map((job, index) => (
+                        {sortedJobs.map((job, index) => (
                             <tr key={job._id}>
                                 <th>{index + 1}</th>
                                 <td>{job.title}</td>
