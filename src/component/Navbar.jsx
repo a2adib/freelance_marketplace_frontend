@@ -1,64 +1,54 @@
-import React, { useContext } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { AuthContext } from "../Provider/AuthProvider";
-import { signOut } from "firebase/auth";
-import auth from "../firebase/firebase.config";
-import toast from "react-hot-toast";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
-    const { user, setUser } = useContext(AuthContext);
-
-    const handleSignOut = () => {
-        signOut(auth)
-            .then(() => {
-                setUser(null);
-                toast.success("Successfully logged out!");
-            })
-            .catch(error => {
-                toast.error(error.message);
-            });
+    // Replace with actual authentication state
+    const isLoggedIn = false; 
+    const user = {
+        displayName: 'John Doe',
+        photoURL: 'https://via.placeholder.com/40'
     };
 
-    const navLinks = (
-        <>
-            <li><NavLink to="/">Home</NavLink></li>
-            <li><NavLink to="/services">Services</NavLink></li>
-            <li><NavLink to="/myprofile">My Profile</NavLink></li>
-        </>
-    );
-
     return (
-        <div className="navbar bg-base-100 shadow-sm sticky top-0 z-50">
-            <div className="navbar-start">
-                <div className="dropdown">
-                    <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
-                        </svg>
-                    </div>
-                    <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                        {navLinks}
-                    </ul>
+        <nav className="bg-base-100 shadow-md">
+            <div className="navbar container mx-auto">
+                <div className="flex-1">
+                    <Link to="/" className="btn btn-ghost normal-case text-xl">Freelance Marketplace</Link>
                 </div>
-                <Link to="/" className="btn btn-ghost text-xl">SkillSwap</Link>
+                <div className="flex-none">
+                    <ul className="menu menu-horizontal px-1">
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/allJobs">All Jobs</Link></li>
+                        {isLoggedIn && (
+                            <>
+                                <li><Link to="/addJob">Add a Job</Link></li>
+                                <li><Link to="/my-accepted-tasks">My Accepted Tasks</Link></li>
+                            </>
+                        )}
+                    </ul>
+                    {isLoggedIn ? (
+                        <div className="dropdown dropdown-end">
+                            <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                                <div className="w-10 rounded-full">
+                                    <img src={user.photoURL} alt="User" />
+                                </div>
+                            </label>
+                            <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                                <li className="p-2">
+                                    <span className="font-bold">{user.displayName}</span>
+                                </li>
+                                <li><button onClick={() => alert('Logout clicked!')}>Logout</button></li>
+                            </ul>
+                        </div>
+                    ) : (
+                        <div className="flex items-center">
+                            <Link to="/login" className="btn btn-ghost">Login</Link>
+                            <Link to="/register" className="btn btn-primary">Register</Link>
+                        </div>
+                    )}
+                </div>
             </div>
-            <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
-                    {navLinks}
-                </ul>
-            </div>
-            <div className="navbar-end">
-                    <div className="flex items-center gap-2">
-                        {
-                            !user && <Link to="/login" className="btn btn-primary">Login</Link>
-                        }
-                    
-                        {
-                            user && <button onClick={handleSignOut} className="btn btn-primary">Logout</button>
-                        }
-                    </div>
-            </div>
-        </div>
+        </nav>
     );
 };
 
