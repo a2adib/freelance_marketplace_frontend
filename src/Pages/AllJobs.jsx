@@ -1,12 +1,37 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import useAxios from '../hooks/useAxios';
+import { Link } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
 const AllJobs = () => {
-    // Mock data for now
-    const jobs = [
-        { id: 1, title: 'Build a React Website', category: 'Web Development', postedBy: 'John Doe', summary: 'Looking for a developer to build a modern React website.' },
-        { id: 2, title: 'Design a Logo', category: 'Graphic Design', postedBy: 'Jane Smith', summary: 'Need a creative logo for our new startup.' },
-        { id: 3, title: 'Write Blog Posts', category: 'Content Writing', postedBy: 'Peter Jones', summary: 'Seeking a writer for our company blog.' },
-    ];
+    const axios = useAxios();
+
+    const getJobs = async () => {
+        const res = await axios.get('/jobs');
+        return res.data;
+    }
+
+    const { data: jobs, isLoading, isError, error } = useQuery({
+        queryKey: ['jobs'],
+        queryFn: getJobs,
+    });
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <ClipLoader color="#36d7b7" size={50} />
+            </div>
+        );
+    }
+
+    if (isError) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-red-500">{error.message}</p>
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto my-12">
@@ -26,14 +51,14 @@ const AllJobs = () => {
                     </thead>
                     <tbody>
                         {jobs.map((job, index) => (
-                            <tr key={job.id}>
+                            <tr key={job._id}>
                                 <th>{index + 1}</th>
                                 <td>{job.title}</td>
                                 <td>{job.category}</td>
                                 <td>{job.postedBy}</td>
                                 <td>{job.summary}</td>
                                 <td>
-                                    <button className="btn btn-primary">View Details</button>
+                                    <Link to={`/allJobs/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </td>
                             </tr>
                         ))}

@@ -1,17 +1,76 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import useAxios from '../hooks/useAxios';
+import { AuthContext } from '../Provider/AuthProvider';
+import toast from 'react-hot-toast';
+import { ClipLoader } from 'react-spinners';
 
 const JobDetails = () => {
+    const { id } = useParams();
+    const axios = useAxios();
+    const { user } = useContext(AuthContext);
+
+    const getJob = async () => {
+        const res = await axios.get(`/jobs/${id}`);
+        return res.data;
+    }
+
+    const { data: job, isLoading, isError, error } = useQuery({
+        queryKey: ['job', id],
+        queryFn: getJob,
+    });
+
+    const { mutate } = useMutation({
+        mutationFn: (acceptedJob) => {
+            return axios.post('/accepted-jobs', acceptedJob);
+        },
+        onSuccess: () => {
+            toast.success('Job accepted successfully');
+        },
+        onError: (err) => {
+            toast.error(err.message);
+        }
+    });
+
+    const handleAcceptJob = () => {
+        const acceptedJob = { ...job, acceptedBy: user.email };
+        mutate(acceptedJob);
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <ClipLoader color="#36d7b7" size={50} />
+            </div>
+        );
+    }
+
+    if (isError) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-red-500">{error.message}</p>
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto my-12">
             <div className="card lg:card-side bg-base-100 shadow-xl">
-                <figure><img src="https://via.placeholder.com/400x400" alt="Job"/></figure>
+                <figure><img src={job.coverImage} alt="Job"/></figure>
                 <div className="card-body">
-                    <h2 className="card-title">Job Title</h2>
-                    <p>Category: Web Development</p>
-                    <p>Posted By: John Doe</p>
-                    <p>Summary: This is a detailed summary of the job. It requires a skilled developer to build a modern and responsive website using the latest technologies.</p>
+                    <h2 className="card-title">{job.title}</h2>
+                    <p>Category: {job.category}</p>
+                    <p>Posted By: {job.postedBy}</p>
+                    <p>Summary: {job.summary}</p>
                     <div className="card-actions justify-end">
-                        <button className="btn btn-primary">Accept</button>
+                        <button 
+                            className="btn btn-primary"
+                            onClick={handleAcceptJob}
+                            disabled={user?.email === job.userEmail}
+                        >
+                            Accept
+                        </button>
                     </div>
                 </div>
             </div>
