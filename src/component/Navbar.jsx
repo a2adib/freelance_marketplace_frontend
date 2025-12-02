@@ -1,13 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../Provider/AuthProvider';
 
 const Navbar = () => {
-    // Replace with actual authentication state
-    const isLoggedIn = false; 
-    const user = {
-        displayName: 'John Doe',
-        photoURL: 'https://via.placeholder.com/40'
-    };
+    const { user, logOut } = useContext(AuthContext);
 
     return (
         <nav className="bg-base-100 shadow-md">
@@ -19,14 +15,14 @@ const Navbar = () => {
                     <ul className="menu menu-horizontal px-1">
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/allJobs">All Jobs</Link></li>
-                        {isLoggedIn && (
+                        {user && (
                             <>
                                 <li><Link to="/addJob">Add a Job</Link></li>
                                 <li><Link to="/my-accepted-tasks">My Accepted Tasks</Link></li>
                             </>
                         )}
                     </ul>
-                    {isLoggedIn ? (
+                    {user ? (
                         <div className="dropdown dropdown-end">
                             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
@@ -37,7 +33,7 @@ const Navbar = () => {
                                 <li className="p-2">
                                     <span className="font-bold">{user.displayName}</span>
                                 </li>
-                                <li><button onClick={() => alert('Logout clicked!')}>Logout</button></li>
+                                <li><button onClick={logOut}>Logout</button></li>
                             </ul>
                         </div>
                     ) : (
