@@ -1,7 +1,51 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Provider/AuthProvider';
+import toast from 'react-hot-toast';
 
 const Register = () => {
+    const { registerWithEmailPassword, handleUpdateProfile, handleGoogleSignin } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const handleRegister = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const name = form.name.value;
+        const email = form.email.value;
+        const photo = form.photo.value;
+        const password = form.password.value;
+
+        if (password.length < 6) {
+            toast.error("Password must be at least 6 characters long");
+            return;
+        } else if (!/[A-Z]/.test(password)) {
+            toast.error("Password must contain at least one uppercase letter");
+            return;
+        } else if (!/[a-z]/.test(password)) {
+            toast.error("Password must contain at least one lowercase letter");
+            return;
+        }
+
+        registerWithEmailPassword(email, password)
+            .then(res => {
+                handleUpdateProfile(name, photo)
+                    .then(() => {
+                        toast.success("Registered successfully");
+                        navigate("/");
+                    })
+            })
+            .catch(err => toast.error(err.message));
+    }
+
+    const handleGoogleSignIn = () => {
+        handleGoogleSignin()
+            .then(res => {
+                toast.success("Registered successfully");
+                navigate("/");
+            })
+            .catch(err => toast.error(err.message));
+    }
+
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row-reverse">
@@ -10,30 +54,30 @@ const Register = () => {
                     <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
                 </div>
                 <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                    <form className="card-body">
+                    <form onSubmit={handleRegister} className="card-body">
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Name</span>
                             </label>
-                            <input type="text" placeholder="name" className="input input-bordered" />
+                            <input type="text" name="name" placeholder="name" className="input input-bordered" />
                         </div>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Email</span>
                             </label>
-                            <input type="email" placeholder="email" className="input input-bordered" />
+                            <input type="email" name="email" placeholder="email" className="input input-bordered" />
                         </div>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Photo URL</span>
                             </label>
-                            <input type="text" placeholder="photo url" className="input input-bordered" />
+                            <input type="text" name="photo" placeholder="photo url" className="input input-bordered" />
                         </div>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type="password" placeholder="password" className="input input-bordered" />
+                            <input type="password" name="password" placeholder="password" className="input input-bordered" />
                         </div>
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Register</button>
@@ -42,7 +86,7 @@ const Register = () => {
                     <div className="card-body">
                         <p>Already have an account? <Link to="/login" className="link link-primary">Login</Link></p>
                         <div className="divider">OR</div>
-                        <button className="btn btn-outline btn-primary">Register with Google</button>
+                        <button onClick={handleGoogleSignIn} className="btn btn-outline btn-primary">Register with Google</button>
                     </div>
                 </div>
             </div>
