@@ -4,7 +4,6 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import useAxios from '../hooks/useAxios';
 import { AuthContext } from '../Provider/AuthProvider';
 import toast from 'react-hot-toast';
-import { ClipLoader } from 'react-spinners';
 
 const JobDetails = () => {
     const { id } = useParams();
@@ -41,7 +40,7 @@ const JobDetails = () => {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <ClipLoader color="#36d7b7" size={50} />
+                <p>Loading...</p>
             </div>
         );
     }

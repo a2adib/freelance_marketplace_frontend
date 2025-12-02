@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxios from '../hooks/useAxios';
 import { Link } from 'react-router-dom';
-import { ClipLoader } from 'react-spinners';
 
 const AllJobs = () => {
     const axios = useAxios();
@@ -21,7 +20,7 @@ const AllJobs = () => {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <ClipLoader color="#36d7b7" size={50} />
+                <p>Loading...</p>
             </div>
         );
     }

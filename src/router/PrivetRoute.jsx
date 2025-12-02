@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../Provider/AuthProvider';
-import { Navigate, useLocation } from 'react-router-dom'; // Corrected import
-import { ClipLoader } from 'react-spinners'; // Import ClipLoader
+import { Navigate, useLocation } from 'react-router-dom';
 
 const PrivetRoute = ({children}) => {
     const {user, loading} = useContext(AuthContext);
@@ -10,7 +9,7 @@ const PrivetRoute = ({children}) => {
     if(loading){
         return (
             <div className="flex justify-center items-center h-screen">
-                <ClipLoader color="#36d7b7" size={50} />
+                <p>Loading...</p>
             </div>
         );
     } 

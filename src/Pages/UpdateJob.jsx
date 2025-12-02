@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxios from '../hooks/useAxios';
 import toast from 'react-hot-toast';
-import { ClipLoader } from 'react-spinners';
 
 const UpdateJob = () => {
     const { id } = useParams();
@@ -57,7 +56,7 @@ const UpdateJob = () => {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <ClipLoader color="#36d7b7" size={50} />
+                <p>Loading...</p>
             </div>
         );
     }

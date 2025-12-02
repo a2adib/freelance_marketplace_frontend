@@ -4,7 +4,6 @@ import useAxios from '../hooks/useAxios';
 import { AuthContext } from '../Provider/AuthProvider';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ClipLoader } from 'react-spinners';
 
 const MyAddedJobs = () => {
     const { user } = useContext(AuthContext);
@@ -38,7 +37,7 @@ const MyAddedJobs = () => {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <ClipLoader color="#36d7b7" size={50} />
+                <p>Loading...</p>
             </div>
         );
     }
