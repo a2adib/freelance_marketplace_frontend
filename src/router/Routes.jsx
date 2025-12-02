@@ -7,10 +7,10 @@ import MyAcceptedTasks from "../Pages/MyAcceptedTasks";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import NotFound from "../Pages/NotFound";
-import ServiceDetails from "../Pages/ServiceDetails";
-import MyProfile from "../Pages/MyProfile";
 import PrivetRoute from "./PrivetRoute";
-import ForgetPass from "../Pages/ForgetPass";
+import MyAddedJobs from "../Pages/MyAddedJobs";
+import UpdateJob from "../Pages/UpdateJob";
+import JobDetails from "../Pages/JobDetails";
 
 const router = createBrowserRouter([
     {
@@ -28,11 +28,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/addJob",
-                element: <AddJob />,
+                element: <PrivetRoute><AddJob /></PrivetRoute>,
             },
             {
                 path: "/my-accepted-tasks",
-                element: <MyAcceptedTasks />,
+                element: <PrivetRoute><MyAcceptedTasks /></PrivetRoute>,
             },
             {
                 path: "/login",
@@ -43,16 +43,16 @@ const router = createBrowserRouter([
                 element: <Register />,
             },
             {
-                path: "/service/:id",
-                element: <ServiceDetails />,
+                path: "/allJobs/:id",
+                element: <PrivetRoute><JobDetails /></PrivetRoute>,
             },
             {
-                path: "/my-profile",
-                element: <PrivetRoute><MyProfile /></PrivetRoute>,
+                path: "/myAddedJobs",
+                element: <PrivetRoute><MyAddedJobs /></PrivetRoute>,
             },
             {
-                path: "/forget-password",
-                element: <ForgetPass />,
+                path: "/updateJob/:id",
+                element: <PrivetRoute><UpdateJob /></PrivetRoute>,
             }
         ]
     }

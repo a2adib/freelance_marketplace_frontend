@@ -18,6 +18,7 @@ const Navbar = () => {
                         {user && (
                             <>
                                 <li><Link to="/addJob">Add a Job</Link></li>
+                                <li><Link to="/myAddedJobs">My Added Jobs</Link></li>
                                 <li><Link to="/my-accepted-tasks">My Accepted Tasks</Link></li>
                             </>
                         )}
