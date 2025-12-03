@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../Provider/AuthProvider';
+import axios from 'axios';
 
 const AddJob = () => {
     const { user } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const AddJob = () => {
         };
 
         console.log(newJob);
-        document.getElementById('add-job-form').reset();
+        axios.post('http://localhost:3000/jobs', newJob)
     }
 
     return (

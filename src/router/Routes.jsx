@@ -53,6 +53,11 @@ const router = createBrowserRouter([
             {
                 path: "/updateJob/:id",
                 element: <PrivetRoute><UpdateJob /></PrivetRoute>,
+            },
+            
+            {
+                path: "/jobDetails/:id",
+                element: <PrivetRoute><JobDetails /></PrivetRoute>,
             }
         ]
     }

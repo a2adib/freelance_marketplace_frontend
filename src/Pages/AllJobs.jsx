@@ -1,28 +1,11 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const jobs = [
-    {
-        _id: '1',
-        title: 'Web Developer',
-        category: 'Web Development',
-        postedBy: 'John Doe',
-        summary: 'Looking for a skilled web developer to build a responsive website.',
-        postedDate: '2025-12-01',
-    },
-    {
-        _id: '2',
-        title: 'Graphic Designer',
-        category: 'Graphic Design',
-        postedBy: 'Jane Smith',
-        summary: 'We need a creative graphic designer to create a new logo.',
-        postedDate: '2025-11-20',
-    },
-];
-
 const AllJobs = () => {
     const [sortOrder, setSortOrder] = useState('asc');
-
+    const [jobs, setJobs] = useState('asc');
+    
     const sortedJobs = [...jobs].sort((a, b) => {
         if (sortOrder === 'asc') {
             return new Date(a.postedDate) - new Date(b.postedDate);
@@ -30,6 +13,14 @@ const AllJobs = () => {
             return new Date(b.postedDate) - new Date(a.postedDate);
         }
     });
+
+    axios.get('http://localhost:3000/jobs')
+    .then(res=>{
+        setJobs(res.data);
+    })
+    .catch(err=>{
+        console.log(err);
+    })
 
     return (
         <div className="container mx-auto my-12">
@@ -64,7 +55,7 @@ const AllJobs = () => {
                                 <td>{job.postedBy}</td>
                                 <td>{job.summary}</td>
                                 <td>
-                                    <Link to={`/job/${job._id}`} className="btn btn-primary">View Details</Link>
+                                    <Link to={`/jobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </td>
                             </tr>
                         ))}
