@@ -1,39 +1,34 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import useAxios from '../hooks/useAxios';
-import toast from 'react-hot-toast';
+
+const jobs = [
+    {
+        _id: '1',
+        title: 'Web Developer',
+        category: 'Web Development',
+        postedBy: 'John Doe',
+        summary: 'Looking for a skilled web developer to build a responsive website.',
+        postedDate: '2025-12-01',
+        userEmail: 'john.doe@example.com',
+        coverImage: 'https://via.placeholder.com/800x400'
+    },
+    {
+        _id: '2',
+        title: 'Graphic Designer',
+        category: 'Graphic Design',
+        postedBy: 'Jane Smith',
+        summary: 'We need a creative graphic designer to create a new logo.',
+        postedDate: '2025-11-20',
+        userEmail: 'jane.smith@example.com',
+        coverImage: 'https://via.placeholder.com/800x400'
+    },
+];
 
 const UpdateJob = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const axios = useAxios();
-    const queryClient = useQueryClient();
 
-    const getJob = async () => {
-        const res = await axios.get(`/jobs/${id}`);
-        return res.data;
-    }
-
-    const { data: job, isLoading, isError, error } = useQuery({
-        queryKey: ['job', id],
-        queryFn: getJob,
-    });
-
-    const { mutate: updateJob } = useMutation({
-        mutationFn: (updatedJob) => {
-            return axios.put(`/jobs/${id}`, updatedJob);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['myJobs']);
-            queryClient.invalidateQueries(['job', id]);
-            toast.success('Job updated successfully');
-            navigate('/myAddedJobs');
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        }
-    });
+    const job = jobs.find(j => j._id === id);
 
     const handleUpdateJob = (e) => {
         e.preventDefault();
@@ -44,27 +39,21 @@ const UpdateJob = () => {
         const coverImage = form.coverImage.value;
 
         const updatedJob = {
+            ...job,
             title,
             category,
             summary,
             coverImage,
         };
 
-        updateJob(updatedJob);
+        console.log('Updated Job:', updatedJob);
+        navigate('/myAddedJobs');
     }
 
-    if (isLoading) {
+    if (!job) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <p>Loading...</p>
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-red-500">{error.message}</p>
+                <p>Job not found.</p>
             </div>
         );
     }

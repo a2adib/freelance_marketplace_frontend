@@ -1,37 +1,27 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import useAxios from '../hooks/useAxios';
 import { Link } from 'react-router-dom';
 
+const jobs = [
+    {
+        _id: '1',
+        title: 'Web Developer',
+        category: 'Web Development',
+        postedBy: 'John Doe',
+        summary: 'Looking for a skilled web developer to build a responsive website.',
+        postedDate: '2025-12-01',
+    },
+    {
+        _id: '2',
+        title: 'Graphic Designer',
+        category: 'Graphic Design',
+        postedBy: 'Jane Smith',
+        summary: 'We need a creative graphic designer to create a new logo.',
+        postedDate: '2025-11-20',
+    },
+];
+
 const AllJobs = () => {
-    const axios = useAxios();
     const [sortOrder, setSortOrder] = useState('asc');
-
-    const getJobs = async () => {
-        const res = await axios.get('/jobs');
-        return res.data;
-    }
-
-    const { data: jobs, isLoading, isError, error } = useQuery({
-        queryKey: ['jobs'],
-        queryFn: getJobs,
-    });
-
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p>Loading...</p>
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-red-500">{error.message}</p>
-            </div>
-        );
-    }
 
     const sortedJobs = [...jobs].sort((a, b) => {
         if (sortOrder === 'asc') {
@@ -74,7 +64,7 @@ const AllJobs = () => {
                                 <td>{job.postedBy}</td>
                                 <td>{job.summary}</td>
                                 <td>
-                                    <Link to={`/allJobs/${job._id}`} className="btn btn-primary">View Details</Link>
+                                    <Link to={`/job/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </td>
                             </tr>
                         ))}

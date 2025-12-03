@@ -1,54 +1,44 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import useAxios from '../hooks/useAxios';
 import { AuthContext } from '../Provider/AuthProvider';
-import toast from 'react-hot-toast';
+
+const jobs = [
+    {
+        _id: '1',
+        title: 'Web Developer',
+        category: 'Web Development',
+        postedBy: 'John Doe',
+        summary: 'Looking for a skilled web developer to build a responsive website.',
+        postedDate: '2025-12-01',
+        userEmail: 'john.doe@example.com',
+        coverImage: 'https://via.placeholder.com/800x400'
+    },
+    {
+        _id: '2',
+        title: 'Graphic Designer',
+        category: 'Graphic Design',
+        postedBy: 'Jane Smith',
+        summary: 'We need a creative graphic designer to create a new logo.',
+        postedDate: '2025-11-20',
+        userEmail: 'jane.smith@example.com',
+        coverImage: 'https://via.placeholder.com/800x400'
+    },
+];
 
 const JobDetails = () => {
     const { id } = useParams();
-    const axios = useAxios();
     const { user } = useContext(AuthContext);
 
-    const getJob = async () => {
-        const res = await axios.get(`/jobs/${id}`);
-        return res.data;
-    }
-
-    const { data: job, isLoading, isError, error } = useQuery({
-        queryKey: ['job', id],
-        queryFn: getJob,
-    });
-
-    const { mutate } = useMutation({
-        mutationFn: (acceptedJob) => {
-            return axios.post('/accepted-jobs', acceptedJob);
-        },
-        onSuccess: () => {
-            toast.success('Job accepted successfully');
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        }
-    });
+    const job = jobs.find(j => j._id === id);
 
     const handleAcceptJob = () => {
-        const acceptedJob = { ...job, acceptedBy: user.email };
-        mutate(acceptedJob);
+        console.log(`Job with id ${id} accepted by ${user.email}`);
     }
 
-    if (isLoading) {
+    if (!job) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <p>Loading...</p>
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-red-500">{error.message}</p>
+                <p>Job not found.</p>
             </div>
         );
     }

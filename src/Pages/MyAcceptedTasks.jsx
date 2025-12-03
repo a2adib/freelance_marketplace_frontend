@@ -1,59 +1,41 @@
 import React, { useContext } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import useAxios from '../hooks/useAxios';
 import { AuthContext } from '../Provider/AuthProvider';
-import toast from 'react-hot-toast';
+
+const acceptedTasks = [
+    {
+        _id: '1',
+        title: 'Web Developer',
+        category: 'Web Development',
+        acceptedBy: 'john.doe@example.com'
+    },
+    {
+        _id: '2',
+        title: 'Graphic Designer',
+        category: 'Graphic Design',
+        acceptedBy: 'jane.smith@example.com'
+    },
+    {
+        _id: '3',
+        title: 'Content Writer',
+        category: 'Content Writing',
+        acceptedBy: 'john.doe@example.com'
+    }
+];
 
 const MyAcceptedTasks = () => {
     const { user } = useContext(AuthContext);
-    const axios = useAxios();
-    const queryClient = useQueryClient();
 
-    const getAcceptedTasks = async () => {
-        const res = await axios.get(`/accepted-jobs/${user.email}`);
-        return res.data;
-    }
+    const myAcceptedTasks = acceptedTasks.filter(task => task.acceptedBy === user?.email);
 
-    const { data: acceptedTasks, isLoading, isError, error } = useQuery({
-        queryKey: ['acceptedTasks', user?.email],
-        queryFn: getAcceptedTasks,
-        enabled: !!user,
-    });
-
-    const { mutate: removeTask } = useMutation({
-        mutationFn: (id) => {
-            return axios.delete(`/accepted-jobs/${id}`);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['acceptedTasks', user?.email]);
-            toast.success('Task status updated successfully');
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        }
-    });
-
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p>Loading...</p>
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-red-500">{error.message}</p>
-            </div>
-        );
-    }
+    const removeTask = (id) => {
+        console.log(`Task with id ${id} removed.`);
+    };
 
     return (
         <div className="container mx-auto my-12">
             <h1 className="text-4xl font-bold text-center mb-8">My Accepted Tasks</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {acceptedTasks.map(task => (
+                {myAcceptedTasks.map(task => (
                     <div key={task._id} className="card w-96 bg-base-100 shadow-xl">
                         <div className="card-body">
                             <h2 className="card-title">{task.title}</h2>

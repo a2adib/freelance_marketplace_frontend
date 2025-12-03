@@ -1,27 +1,8 @@
 import React, { useContext } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import useAxios from '../hooks/useAxios';
 import { AuthContext } from '../Provider/AuthProvider';
-import toast from 'react-hot-toast';
 
 const AddJob = () => {
     const { user } = useContext(AuthContext);
-    const axios = useAxios();
-    const queryClient = useQueryClient();
-
-    const { mutate } = useMutation({
-        mutationFn: (newJob) => {
-            return axios.post('/jobs', newJob);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['jobs']);
-            toast.success('Job added successfully');
-            document.getElementById('add-job-form').reset();
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        }
-    });
 
     const handleAddJob = (e) => {
         e.preventDefault();
@@ -40,10 +21,10 @@ const AddJob = () => {
             coverImage,
             postedBy,
             userEmail,
-            postedDate: new Date(),
         };
 
-        mutate(newJob);
+        console.log(newJob);
+        document.getElementById('add-job-form').reset();
     }
 
     return (

@@ -1,22 +1,53 @@
-import React from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
-import useAxios from '../hooks/useAxios';
 import { Link } from 'react-router-dom';
 
+const latestJobs = [
+    {
+        _id: '1',
+        title: 'Web Developer',
+        category: 'Web Development',
+        summary: 'Looking for a skilled web developer to build a responsive website.',
+        coverImage: 'https://via.placeholder.com/400x250',
+    },
+    {
+        _id: '2',
+        title: 'Graphic Designer',
+        category: 'Graphic Design',
+        summary: 'We need a creative graphic designer to create a new logo.',
+        coverImage: 'https://via.placeholder.com/400x250',
+    },
+    {
+        _id: '3',
+        title: 'Content Writer',
+        category: 'Content Writing',
+        summary: 'Join our team as a content writer.',
+        coverImage: 'https://via.placeholder.com/400x250',
+    },
+    {
+        _id: '4',
+        title: 'Digital Marketer',
+        category: 'Digital Marketing',
+        summary: 'Experienced digital marketer wanted.',
+        coverImage: 'https://via.placeholder.com/400x250',
+    },
+    {
+        _id: '5',
+        title: 'Video Editor',
+        category: 'Video Editing',
+        summary: 'Creative video editor needed for a project.',
+        coverImage: 'https://via.placeholder.com/400x250',
+    },
+    {
+        _id: '6',
+        title: 'SEO Specialist',
+        category: 'Digital Marketing',
+        summary: 'Looking for an SEO specialist to improve our ranking.',
+        coverImage: 'https://via.placeholder.com/400x250',
+    },
+];
+
 const Home = () => {
-    const axios = useAxios();
-
-    const getLatestJobs = async () => {
-        const res = await axios.get('/jobs?limit=6');
-        return res.data;
-    }
-
-    const { data: latestJobs, isLoading, isError, error } = useQuery({
-        queryKey: ['latestJobs'],
-        queryFn: getLatestJobs,
-    });
-
     const bannerVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -57,27 +88,21 @@ const Home = () => {
             <div className="container mx-auto my-12">
                 <h2 className="text-3xl font-bold text-center mb-8">Latest Jobs</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {isLoading ? (
-                        <p>Loading...</p>
-                    ) : isError ? (
-                        <p>{error.message}</p>
-                    ) : (
-                        latestJobs.map(job => (
-                            <div key={job._id} className="card w-96 bg-base-100 shadow-xl">
-                                <figure><img src={job.coverImage} alt="Job" /></figure>
-                                <div className="card-body">
-                                    <h2 className="card-title">
-                                        {job.title}
-                                        <div className="badge badge-secondary">NEW</div>
-                                    </h2>
-                                    <p>{job.summary}</p>
-                                    <div className="card-actions justify-end">
-                                        <Link to={`/allJobs/${job._id}`} className="btn btn-primary">View Details</Link>
-                                    </div>
+                    {latestJobs.map(job => (
+                        <div key={job._id} className="card w-96 bg-base-100 shadow-xl">
+                            <figure><img src={job.coverImage} alt="Job" /></figure>
+                            <div className="card-body">
+                                <h2 className="card-title">
+                                    {job.title}
+                                    <div className="badge badge-secondary">NEW</div>
+                                </h2>
+                                <p>{job.summary}</p>
+                                <div className="card-actions justify-end">
+                                    <Link to={`/job/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </div>
                             </div>
-                        ))
-                    )}
+                        </div>
+                    ))}
                 </div>
             </div>
 

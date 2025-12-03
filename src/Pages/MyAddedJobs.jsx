@@ -1,54 +1,45 @@
 import React, { useContext } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import useAxios from '../hooks/useAxios';
 import { AuthContext } from '../Provider/AuthProvider';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+
+const jobs = [
+    {
+        _id: '1',
+        title: 'Web Developer',
+        category: 'Web Development',
+        postedBy: 'John Doe',
+        summary: 'Looking for a skilled web developer to build a responsive website.',
+        postedDate: '2025-12-01',
+        userEmail: 'john.doe@example.com',
+    },
+    {
+        _id: '2',
+        title: 'Graphic Designer',
+        category: 'Graphic Design',
+        postedBy: 'Jane Smith',
+        summary: 'We need a creative graphic designer to create a new logo.',
+        postedDate: '2025-11-20',
+        userEmail: 'jane.smith@example.com',
+    },
+    {
+        _id: '3',
+        title: 'Content Writer',
+        category: 'Content Writing',
+        postedBy: 'John Doe',
+        summary: 'Join our team as a content writer.',
+        postedDate: '2025-12-05',
+        userEmail: 'john.doe@example.com',
+    }
+];
 
 const MyAddedJobs = () => {
     const { user } = useContext(AuthContext);
-    const axios = useAxios();
-    const queryClient = useQueryClient();
 
-    const getMyJobs = async () => {
-        const res = await axios.get(`/jobs/user/${user.email}`);
-        return res.data;
-    }
+    const myJobs = jobs.filter(job => job.userEmail === user?.email);
 
-    const { data: myJobs, isLoading, isError, error } = useQuery({
-        queryKey: ['myJobs', user?.email],
-        queryFn: getMyJobs,
-        enabled: !!user,
-    });
-
-    const { mutate: deleteJob } = useMutation({
-        mutationFn: (id) => {
-            return axios.delete(`/jobs/${id}`);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['myJobs', user?.email]);
-            toast.success('Job deleted successfully');
-        },
-        onError: (err) => {
-            toast.error(err.message);
-        }
-    });
-
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p>Loading...</p>
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-red-500">{error.message}</p>
-            </div>
-        );
-    }
+    const deleteJob = (id) => {
+        console.log(`Job with id ${id} deleted.`);
+    };
 
     return (
         <div className="container mx-auto my-12">
