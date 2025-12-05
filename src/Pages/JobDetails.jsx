@@ -26,8 +26,27 @@ const JobDetails = () => {
     const job = jobs.find(j => j._id === id);
 
     const handleAcceptJob = () => {
-        console.log(`Job with id ${id} accepted by ${user.email}`);
-    }
+        if (!job || !user?.email) return;
+
+        const acceptedJobData = {
+            jobId: job._id,
+            coverImage: job.coverImage,
+            title: job.title,
+            category: job.category,
+            postedBy: job.postedBy,
+            summary: job.summary,
+            acceptedBy: user.email,
+            acceptedAt: new Date().toISOString(),
+        };
+        axios.post('http://localhost:3000/acceptedJobs', acceptedJobData)
+            .then(res => {
+                console.log('Job accepted successfully:', res.data);
+                alert('You have successfully accepted the job!');
+            })
+            .catch(err => {
+                console.log('Error accepting job:', err);
+            });
+    };
 
     if (!job) {
         return (
