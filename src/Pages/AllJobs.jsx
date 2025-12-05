@@ -57,7 +57,7 @@ const AllJobs = () => {
                                 <td>{job.postedBy}</td>
                                 <td>{job.summary}</td>
                                 <td>
-                                    <Link to={`/JobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
+                                    <Link to={`/allJobs/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </td>
                             </tr>
                         ))}

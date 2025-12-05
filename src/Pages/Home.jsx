@@ -1,53 +1,30 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const latestJobs = [
-    {
-        _id: '1',
-        title: 'Web Developer',
-        category: 'Web Development',
-        summary: 'Looking for a skilled web developer to build a responsive website.',
-        coverImage: 'https://via.placeholder.com/400x250',
-    },
-    {
-        _id: '2',
-        title: 'Graphic Designer',
-        category: 'Graphic Design',
-        summary: 'We need a creative graphic designer to create a new logo.',
-        coverImage: 'https://via.placeholder.com/400x250',
-    },
-    {
-        _id: '3',
-        title: 'Content Writer',
-        category: 'Content Writing',
-        summary: 'Join our team as a content writer.',
-        coverImage: 'https://via.placeholder.com/400x250',
-    },
-    {
-        _id: '4',
-        title: 'Digital Marketer',
-        category: 'Digital Marketing',
-        summary: 'Experienced digital marketer wanted.',
-        coverImage: 'https://via.placeholder.com/400x250',
-    },
-    {
-        _id: '5',
-        title: 'Video Editor',
-        category: 'Video Editing',
-        summary: 'Creative video editor needed for a project.',
-        coverImage: 'https://via.placeholder.com/400x250',
-    },
-    {
-        _id: '6',
-        title: 'SEO Specialist',
-        category: 'Digital Marketing',
-        summary: 'Looking for an SEO specialist to improve our ranking.',
-        coverImage: 'https://via.placeholder.com/400x250',
-    },
-];
+
 
 const Home = () => {
+
+    const [jobs, setJobs] = useState([]);
+
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/jobs')
+    .then(res=>{
+        setJobs(res.data);
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+}, []);
+
+const latestJobs = [...jobs].sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    }).slice(0, 6);
+
     const bannerVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -77,9 +54,12 @@ const Home = () => {
                         initial="hidden"
                         animate="visible"
                     >
-                        <motion.h1 variants={itemVariants} className="mb-5 text-5xl font-bold">Find Your Next Big Opportunity</motion.h1>
-                        <motion.p variants={itemVariants} className="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</motion.p>
-                        <motion.button variants={itemVariants} className="btn btn-primary">Get Started</motion.button>
+                        <motion.h1 variants={itemVariants} className="mb-5 text-5xl font-bold">Connect, Collaborate, and Create</motion.h1>
+                        <motion.p variants={itemVariants} className="mb-5">The most reliable marketplace for connecting with skilled freelancers and finding your next project.</motion.p>
+                        <motion.div variants={itemVariants} className="flex justify-center gap-4">
+                            <button className="btn btn-primary">How It Works</button>
+                            <Link to="/addJob" className="btn btn-secondary">Create a Job</Link>
+                        </motion.div>
                     </motion.div>
                 </div>
             </div>
@@ -98,7 +78,7 @@ const Home = () => {
                                 </h2>
                                 <p>{job.summary}</p>
                                 <div className="card-actions justify-end">
-                                    <Link to={`/job/${job._id}`} className="btn btn-primary">View Details</Link>
+                                    <Link to={`/JobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </div>
                             </div>
                         </div>
@@ -111,26 +91,30 @@ const Home = () => {
                 <div className="container mx-auto">
                     <h2 className="text-3xl font-bold text-center mb-8">Top Categories</h2>
                     <div className="flex flex-wrap justify-center gap-8">
-                        {/* Example Category */}
                         <div className="card w-72 bg-base-100 shadow-xl image-full">
-                            <figure><img src="https://via.placeholder.com/300x200" alt="Category" /></figure>
+                            <figure><img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Web Development" /></figure>
                             <div className="card-body">
                                 <div className="card-title text-white">Web Development</div>
                             </div>
                         </div>
                         <div className="card w-72 bg-base-100 shadow-xl image-full">
-                            <figure><img src="https://via.placeholder.com/300x200" alt="Category" /></figure>
+                            <figure><img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Graphic Design" /></figure>
                             <div className="card-body">
                                 <div className="card-title text-white">Graphic Design</div>
                             </div>
                         </div>
                         <div className="card w-72 bg-base-100 shadow-xl image-full">
-                            <figure><img src="https://via.placeholder.com/300x200" alt="Category" /></figure>
+                            <figure><img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Content Writing" /></figure>
                             <div className="card-body">
                                 <div className="card-title text-white">Content Writing</div>
                             </div>
                         </div>
-                        {/* Repeat for other categories */}
+                         <div className="card w-72 bg-base-100 shadow-xl image-full">
+                            <figure><img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Content Writing" /></figure>
+                            <div className="card-body">
+                                <div className="card-title text-white">Digital Marketing</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,10 +123,10 @@ const Home = () => {
             <div className="container mx-auto my-12">
                 <div className="hero">
                     <div className="hero-content flex-col lg:flex-row">
-                        <img src="https://via.placeholder.com/400x400" className="max-w-sm rounded-lg shadow-2xl" alt="About" />
+                        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="max-w-sm rounded-lg shadow-2xl" alt="About" />
                         <div>
-                            <h1 className="text-5xl font-bold">About Our Platform</h1>
-                            <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                            <h1 className="text-5xl font-bold">About Freelance Marketplace</h1>
+                            <p className="py-6">Freelance Marketplace is a curated marketplace that connects businesses with top-tier freelancers. We believe in fostering a community of trust, collaboration, and excellence, making it easier than ever to find the right talent or your next big project.</p>
                             <button className="btn btn-primary">Learn More</button>
                         </div>
                     </div>
