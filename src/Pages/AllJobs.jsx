@@ -4,40 +4,35 @@ import { Link } from 'react-router-dom';
 
 const AllJobs = () => {
     const [jobs, setJobs] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [category, setCategory] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:3000/jobs')
-            .then(res => {
+        axios
+            .get(`http://localhost:3000/jobs?category=${category}`)
+            .then((res) => {
                 setJobs(res.data);
             })
-            .catch(err => {
-                console.log(err);
-            });
-    }, []);
-
-    const filteredJobs = jobs.filter(job => {
-        if (selectedCategory === 'All') {
-            return true;
-        }
-        return job.category === selectedCategory;
-    });
+            .catch((err) => console.log("Fetch error:", err));
+    }, [category]);
 
     return (
         <div className="container mx-auto my-12">
             <h1 className="text-4xl font-bold text-center mb-8">All Jobs</h1>
             <div className="text-center mb-4">
                 <select 
+                    
+                    onChange={(e) => setCategory(e.target.value)}
+                    defaultValue="Choose Category"
                     className="select select-bordered w-full max-w-xs"
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
                 >
-                    <option>All</option>
-                    <option>Web Development</option>
-                    <option>Graphic Design</option>
-                    <option>Content Writing</option>
-                    <option>Digital Marketing</option>
-                    <option>Video Editing</option>
+                    <option disabled={true}>Choose Category</option>
+
+                    <option value="">All</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Graphic Design">Graphic Design</option>
+                    <option value="Content Writing">Content Writing</option>
+                    <option value="Digital Marketing">Digital Marketing</option>
+                    <option value="Video Editing">Video Editing</option>
                 </select>
             </div>
             <div className="overflow-x-auto">
@@ -54,7 +49,7 @@ const AllJobs = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredJobs.map((job, index) => (
+                        {jobs.map((job, index) => (
                             <tr key={job._id}>
                                 <th>{index + 1}</th>
                                 <td>{job.title}</td>
