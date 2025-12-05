@@ -21,6 +21,15 @@ const MyAddedJobs = () => {
 
   const deleteJob = (id) => {
     console.log(`Job with id ${id} deleted.`);
+    axios.delete(`http://localhost:3000/delete/${id}`)
+        .then((res) => {
+            console.log('Job deleted successfully:', res.data);
+            const remainingJobs = myJobs.filter(job => job._id !== id);
+            setJobs(remainingJobs);
+        })
+        .catch((err) => {
+            console.log('Error deleting job:', err);
+        });
   };
 
   return (

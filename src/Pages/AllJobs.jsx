@@ -3,37 +3,42 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const AllJobs = () => {
-    const [sortOrder, setSortOrder] = useState('asc');
-    const [jobs, setJobs] = useState('asc');
-    
-    const sortedJobs = [...jobs].sort((a, b) => {
-        if (sortOrder === 'asc') {
-            return new Date(a.postedDate) - new Date(b.postedDate);
-        } else {
-            return new Date(b.postedDate) - new Date(a.postedDate);
-        }
-    });
+    const [jobs, setJobs] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
     useEffect(() => {
         axios.get('http://localhost:3000/jobs')
-    .then(res=>{
-        setJobs(res.data);
-    })
-    .catch(err=>{
-        console.log(err);
-    })
-}, []);
+            .then(res => {
+                setJobs(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, []);
+
+    const filteredJobs = jobs.filter(job => {
+        if (selectedCategory === 'All') {
+            return true;
+        }
+        return job.category === selectedCategory;
+    });
 
     return (
         <div className="container mx-auto my-12">
             <h1 className="text-4xl font-bold text-center mb-8">All Jobs</h1>
             <div className="text-center mb-4">
-                <button
-                    className="btn btn-secondary"
-                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                <select 
+                    className="select select-bordered w-full max-w-xs"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
                 >
-                    Sort by Date ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
-                </button>
+                    <option>All</option>
+                    <option>Web Development</option>
+                    <option>Graphic Design</option>
+                    <option>Content Writing</option>
+                    <option>Digital Marketing</option>
+                    <option>Video Editing</option>
+                </select>
             </div>
             <div className="overflow-x-auto">
                 <table className="table w-full">
@@ -49,7 +54,7 @@ const AllJobs = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedJobs.map((job, index) => (
+                        {filteredJobs.map((job, index) => (
                             <tr key={job._id}>
                                 <th>{index + 1}</th>
                                 <td>{job.title}</td>
@@ -57,7 +62,7 @@ const AllJobs = () => {
                                 <td>{job.postedBy}</td>
                                 <td>{job.summary}</td>
                                 <td>
-                                    <Link to={`/allJobs/${job._id}`} className="btn btn-primary">View Details</Link>
+                                    <Link to={`/JobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </td>
                             </tr>
                         ))}
