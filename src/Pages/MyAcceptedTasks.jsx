@@ -16,6 +16,19 @@ const MyAcceptedTasks = () => {
       .catch((err) => console.log("Fetch error:", err));
   }, [user?.email]);
 
+   const removeTask = (id) => {
+    console.log(`Task with id ${id} removed.`);
+    axios.delete(`http://localhost:3000/remove/${id}`)
+        .then((res) => {
+            console.log('Task removed successfully:', res.data);
+            const remainingTasks = jobs.filter(task => task._id !== id);
+            setJobs(remainingTasks);
+        })
+        .catch((err) => {
+            console.log('Error removing task:', err);
+        });
+  }
+
     return (
         <div className="container mx-auto my-12">
             <h1 className="text-4xl font-bold text-center mb-8">My Accepted Tasks</h1>
@@ -29,8 +42,8 @@ const MyAcceptedTasks = () => {
                             <h2 className="card-title">{task.title}</h2>
                             <p>{task.category}</p>
                             <div className="card-actions justify-end">
-                                {/* <button onClick={() => removeTask(task._id)} className="btn btn-success">Done</button>
-                                <button onClick={() => removeTask(task._id)} className="btn btn-error">Cancel</button> */}
+                                <button onClick={() => removeTask(task._id)} className="btn btn-success">Done</button>
+                                <button onClick={() => removeTask(task._id)} className="btn btn-error">Cancel</button>
                             </div>
                         </div>
                     </div>
