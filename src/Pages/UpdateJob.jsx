@@ -1,32 +1,29 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const jobs = [
-    {
-        _id: '1',
-        title: 'Web Developer',
-        category: 'Web Development',
-        postedBy: 'John Doe',
-        summary: 'Looking for a skilled web developer to build a responsive website.',
-        postedDate: '2025-12-01',
-        userEmail: 'john.doe@example.com',
-        coverImage: 'https://via.placeholder.com/800x400'
-    },
-    {
-        _id: '2',
-        title: 'Graphic Designer',
-        category: 'Graphic Design',
-        postedBy: 'Jane Smith',
-        summary: 'We need a creative graphic designer to create a new logo.',
-        postedDate: '2025-11-20',
-        userEmail: 'jane.smith@example.com',
-        coverImage: 'https://via.placeholder.com/800x400'
-    },
-];
+
 
 const UpdateJob = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [jobs, setJobs] = useState([]); 
+    const [categorys, setCategories] = useState([jobs.category]);   
+
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/jobs')
+    .then(res=>{
+        setJobs(res.data);
+        if(jobs.category){
+            setCategories(jobs.category);
+        }
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+}, [jobs.category]);
+    
 
     const job = jobs.find(j => j._id === id);
 
@@ -47,7 +44,14 @@ const UpdateJob = () => {
         };
 
         console.log('Updated Job:', updatedJob);
-        navigate('/myAddedJobs');
+        axios.put(`http://localhost:3000/update/${id}`, updatedJob)
+        .then(res => {
+            console.log('Job updated successfully:', res.data);
+            navigate('/myAddedJobs');
+        })
+        .catch(err => {
+            console.log('Error updating job:', err);
+        });
     }
 
     if (!job) {
@@ -73,7 +77,7 @@ const UpdateJob = () => {
                         <label className="label">
                             <span className="label-text">Category</span>
                         </label>
-                        <select name="category" className="select select-bordered" defaultValue={job?.category}>
+                        <select name="category" className="select select-bordered" defaultValue={categorys}>
                             <option>Web Development</option>
                             <option>Graphic Design</option>
                             <option>Content Writing</option>

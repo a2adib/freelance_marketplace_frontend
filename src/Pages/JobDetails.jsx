@@ -1,33 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
+import axios from 'axios';
 
-const jobs = [
-    {
-        _id: '1',
-        title: 'Web Developer',
-        category: 'Web Development',
-        postedBy: 'John Doe',
-        summary: 'Looking for a skilled web developer to build a responsive website.',
-        postedDate: '2025-12-01',
-        userEmail: 'john.doe@example.com',
-        coverImage: 'https://via.placeholder.com/800x400'
-    },
-    {
-        _id: '2',
-        title: 'Graphic Designer',
-        category: 'Graphic Design',
-        postedBy: 'Jane Smith',
-        summary: 'We need a creative graphic designer to create a new logo.',
-        postedDate: '2025-11-20',
-        userEmail: 'jane.smith@example.com',
-        coverImage: 'https://via.placeholder.com/800x400'
-    },
-];
+
 
 const JobDetails = () => {
     const { id } = useParams();
     const { user } = useContext(AuthContext);
+
+
+    const [jobs, setJobs] = useState([]);
+    useEffect(() => {
+        axios.get('http://localhost:3000/jobs')
+    .then(res=>{
+        setJobs(res.data);
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+}, []);
+
+
 
     const job = jobs.find(j => j._id === id);
 

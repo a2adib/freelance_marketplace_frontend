@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const AllJobs = () => {
@@ -14,13 +14,15 @@ const AllJobs = () => {
         }
     });
 
-    axios.get('http://localhost:3000/jobs')
+    useEffect(() => {
+        axios.get('http://localhost:3000/jobs')
     .then(res=>{
         setJobs(res.data);
     })
     .catch(err=>{
         console.log(err);
     })
+}, []);
 
     return (
         <div className="container mx-auto my-12">
@@ -55,7 +57,7 @@ const AllJobs = () => {
                                 <td>{job.postedBy}</td>
                                 <td>{job.summary}</td>
                                 <td>
-                                    <Link to={`/jobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
+                                    <Link to={`/allJobs/${job._id}`} className="btn btn-primary">View Details</Link>
                                 </td>
                             </tr>
                         ))}
