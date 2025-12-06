@@ -26,6 +26,7 @@ const AddJob = () => {
 
         console.log(newJob);
         axios.post('http://localhost:3000/jobs', newJob)
+        e.target.reset()
     }
 
     return (

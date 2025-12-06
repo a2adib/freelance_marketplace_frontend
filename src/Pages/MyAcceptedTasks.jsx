@@ -38,6 +38,20 @@ const MyAcceptedTasks = () => {
         });
   }
 
+  const doneTask = (id) => {
+    console.log(`Task with id ${id} removed.`);
+    axios.delete(`http://localhost:3000/remove/${id}`)
+        .then((res) => {
+            toast.success('Task completed successfully!',res.data);
+            const remainingTasks = jobs.filter(task => task._id !== id);
+            setJobs(remainingTasks);
+        })
+        .catch((err) => {
+            toast.error('Error completed task!',err);
+        });
+  }
+
+
     return (
         <div className="container mx-auto my-12">
             <h1 className="text-4xl font-bold text-center mb-8">My Accepted Tasks</h1>
@@ -56,7 +70,7 @@ const MyAcceptedTasks = () => {
                                 <h2 className="card-title">{task.title}</h2>
                                 <p>{task.category}</p>
                                 <div className="card-actions justify-end">
-                                    <button onClick={() => removeTask(task._id)} className="btn btn-success">Done</button>
+                                    <button onClick={() => doneTask(task._id)} className="btn btn-success">Done</button>
                                     <button onClick={() => removeTask(task._id)} className="btn btn-error">Cancel</button>
                                 </div>
                             </div>
