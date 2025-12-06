@@ -76,7 +76,7 @@ const latestJobs = [...jobs].sort((a, b) => {
                         <ClipLoader size={50} color={"#123abc"} loading={loading} />
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
                         {latestJobs.map(job => (
                             <div key={job._id} className="card w-96 bg-base-100 shadow-xl">
                                 <figure><img src={job.coverImage} alt="Job" /></figure>
