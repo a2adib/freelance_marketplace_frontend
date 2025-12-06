@@ -14,8 +14,7 @@ const Home = () => {
 
 
     useEffect(() => {
-        setLoading(true);
-        axios.get('http://localhost:3000/jobs')
+        axios.get('https://freelance-marketplace-backend.vercel.app/jobs')
     .then(res=>{
         setJobs(res.data);
         setLoading(false);

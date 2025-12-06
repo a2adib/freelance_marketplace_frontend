@@ -17,7 +17,7 @@ const Login = () => {
 
         loginWithEmailPassword(email, password)
             .then(res => {
-                toast.success("Logged in successfully");
+                toast.success("Logged in successfully",res.data);
                 navigate(from, { replace: true });
             })
             .catch(err => toast.error(err.message));
@@ -26,7 +26,7 @@ const Login = () => {
     const handleGoogleSignIn = () => {
         handleGoogleSignin()
             .then(res => {
-                toast.success("Logged in successfully");
+                toast.success("Logged in successfully",res.data);
                 navigate(from, { replace: true });
             })
             .catch(err => toast.error(err.message));

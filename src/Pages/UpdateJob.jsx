@@ -12,8 +12,7 @@ const UpdateJob = () => {
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-        setLoading(true);
-        axios.get('http://localhost:3000/jobs')
+        axios.get('https://freelance-marketplace-backend.vercel.app/jobs')
     .then(res=>{
         setJobs(res.data);
         setLoading(false);
@@ -43,7 +42,7 @@ const UpdateJob = () => {
             coverImage,
         };
 
-        axios.put(`http://localhost:3000/update/${id}`, updatedJob)
+        axios.put(`https://freelance-marketplace-backend.vercel.app/update/${id}`, updatedJob)
         .then(res => {
             console.log('Job updated successfully:', res.data);
             toast.success('Job updated successfully!');

@@ -25,7 +25,7 @@ const AddJob = () => {
         };
 
         console.log(newJob);
-        axios.post('http://localhost:3000/jobs', newJob)
+        axios.post('https://freelance-marketplace-backend.vercel.app/jobs', newJob)
         e.target.reset()
     }
 

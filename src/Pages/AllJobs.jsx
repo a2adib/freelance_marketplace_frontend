@@ -9,9 +9,8 @@ const AllJobs = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
         axios
-            .get(`http://localhost:3000/jobs?category=${category}`)
+            .get(`https://freelance-marketplace-backend.vercel.app/jobs?category=${category}`)
             .then((res) => {
                 setJobs(res.data);
                 setLoading(false);

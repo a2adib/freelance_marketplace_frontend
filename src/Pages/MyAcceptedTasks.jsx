@@ -12,9 +12,8 @@ const MyAcceptedTasks = () => {
     
 
   useEffect(() => {
-    setLoading(true);
     axios
-      .get(`http://localhost:3000/acceptedJobs?email=${user?.email}`)
+      .get(`https://freelance-marketplace-backend.vercel.app/acceptedJobs?email=${user?.email}`)
       .then((res) => {
         setJobs(res.data);
         setLoading(false);
@@ -27,7 +26,7 @@ const MyAcceptedTasks = () => {
 
    const removeTask = (id) => {
     console.log(`Task with id ${id} removed.`);
-    axios.delete(`http://localhost:3000/remove/${id}`)
+    axios.delete(`https://freelance-marketplace-backend.vercel.app/remove/${id}`)
         .then((res) => {
             toast.success('Task removed successfully!',res.data);
             const remainingTasks = jobs.filter(task => task._id !== id);
@@ -40,7 +39,7 @@ const MyAcceptedTasks = () => {
 
   const doneTask = (id) => {
     console.log(`Task with id ${id} removed.`);
-    axios.delete(`http://localhost:3000/remove/${id}`)
+    axios.delete(`https://freelance-marketplace-backend.vercel.app/remove/${id}`)
         .then((res) => {
             toast.success('Task completed successfully!',res.data);
             const remainingTasks = jobs.filter(task => task._id !== id);

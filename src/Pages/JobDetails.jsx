@@ -15,8 +15,7 @@ const JobDetails = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        setLoading(true);
-        axios.get('http://localhost:3000/jobs')
+        axios.get('https://freelance-marketplace-backend.vercel.app/jobs')
     .then(res=>{
         setJobs(res.data);
         setLoading(false);
@@ -44,7 +43,7 @@ const JobDetails = () => {
             acceptedBy: user.email,
             acceptedAt: new Date().toISOString(),
         };
-        axios.post('http://localhost:3000/acceptedJobs', acceptedJobData)
+        axios.post('https://freelance-marketplace-backend.vercel.app/acceptedJobs', acceptedJobData)
             .then(res => {
                 console.log('Job accepted successfully:', res.data);
                 toast.success('You have successfully accepted the job!');
