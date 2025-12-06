@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import { ClipLoader } from 'react-spinners';
 
 
 
@@ -11,13 +13,17 @@ const JobDetails = () => {
 
 
     const [jobs, setJobs] = useState([]);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
+        setLoading(true);
         axios.get('http://localhost:3000/jobs')
     .then(res=>{
         setJobs(res.data);
+        setLoading(false);
     })
     .catch(err=>{
         console.log(err);
+        setLoading(false);
     })
 }, []);
 
@@ -41,12 +47,21 @@ const JobDetails = () => {
         axios.post('http://localhost:3000/acceptedJobs', acceptedJobData)
             .then(res => {
                 console.log('Job accepted successfully:', res.data);
-                alert('You have successfully accepted the job!');
+                toast.success('You have successfully accepted the job!');
             })
             .catch(err => {
                 console.log('Error accepting job:', err);
+                toast.error('Error accepting job!');
             });
     };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <ClipLoader size={50} color={"#123abc"} loading={loading} />
+            </div>
+        );
+    }
 
     if (!job) {
         return (

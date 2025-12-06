@@ -1,28 +1,28 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
+import toast from 'react-hot-toast';
+import { ClipLoader } from 'react-spinners';
 
 
 const UpdateJob = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [jobs, setJobs] = useState([]); 
-    const [categorys, setCategories] = useState([jobs.category]);   
-
-
+    const [loading, setLoading] = useState(true);
+    
     useEffect(() => {
+        setLoading(true);
         axios.get('http://localhost:3000/jobs')
     .then(res=>{
         setJobs(res.data);
-        if(jobs.category){
-            setCategories(jobs.category);
-        }
+        setLoading(false);
     })
     .catch(err=>{
         console.log(err);
+        setLoading(false);
     })
-}, [jobs.category]);
+}, []);
     
 
     const job = jobs.find(j => j._id === id);
@@ -43,15 +43,24 @@ const UpdateJob = () => {
             coverImage,
         };
 
-        console.log('Updated Job:', updatedJob);
         axios.put(`http://localhost:3000/update/${id}`, updatedJob)
         .then(res => {
             console.log('Job updated successfully:', res.data);
+            toast.success('Job updated successfully!');
             navigate('/myAddedJobs');
         })
         .catch(err => {
-            console.log('Error updating job:', err);
+            console.log('Error updating job:', err);    
+            toast.error('Error updating job!');
         });
+    }
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <ClipLoader size={50} color={"#123abc"} loading={loading} />
+            </div>
+        );
     }
 
     if (!job) {
@@ -77,7 +86,7 @@ const UpdateJob = () => {
                         <label className="label">
                             <span className="label-text">Category</span>
                         </label>
-                        <select name="category" className="select select-bordered" defaultValue={categorys}>
+                        <select name="category" className="select select-bordered" defaultValue={job?.category}>
                             <option>Web Development</option>
                             <option>Graphic Design</option>
                             <option>Content Writing</option>

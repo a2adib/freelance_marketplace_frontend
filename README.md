@@ -1,16 +1,37 @@
-# React + Vite
+# Freelance Marketplace Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend application for a freelance marketplace, built with React and Vite. It allows users to browse jobs, add new jobs, update existing jobs, and manage their accepted tasks.
 
-Currently, two official plugins are available:
+## Live Site URL
+[Will be updated later]
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+-   **User Authentication:** Register and Login with email/password and Google.
+-   **Job Listings:** View all available jobs with filtering by category.
+-   **Job Details:** View detailed information about a specific job.
+-   **Add Job:** Users can add new job postings.
+-   **My Added Jobs:** Users can view, update, and delete their own job postings.
+-   **My Accepted Tasks:** Users can view and manage the jobs they have accepted.
+-   **Responsive Design:** Mobile-friendly layouts for job listings.
+-   **Toast Notifications:** User feedback for actions like login, registration, job acceptance, and job updates.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+-   Node.js (LTS version recommended)
+-   npm or yarn
+
+## Technologies Used
+
+-   React
+-   Vite
+-   Tailwind CSS
+-   DaisyUI
+-   Axios
+-   React Router DOM
+-   Firebase Authentication
+-   React Hot Toast
+-   Framer Motion
+-   React Query (removed in recent simplification, but could be re-integrated for robust data management)

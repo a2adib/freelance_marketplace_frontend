@@ -1,18 +1,25 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
 const AllJobs = () => {
     const [jobs, setJobs] = useState([]);
     const [category, setCategory] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         axios
             .get(`http://localhost:3000/jobs?category=${category}`)
             .then((res) => {
                 setJobs(res.data);
+                setLoading(false);
             })
-            .catch((err) => console.log("Fetch error:", err));
+            .catch((err) => {
+                console.log("Fetch error:", err);
+                setLoading(false);
+            });
     }, [category]);
 
     return (
@@ -20,13 +27,11 @@ const AllJobs = () => {
             <h1 className="text-4xl font-bold text-center mb-8">All Jobs</h1>
             <div className="text-center mb-4">
                 <select 
-                    
                     onChange={(e) => setCategory(e.target.value)}
                     defaultValue="Choose Category"
                     className="select select-bordered w-full max-w-xs"
                 >
                     <option disabled={true}>Choose Category</option>
-
                     <option value="">All</option>
                     <option value="Web Development">Web Development</option>
                     <option value="Graphic Design">Graphic Design</option>
@@ -35,35 +40,32 @@ const AllJobs = () => {
                     <option value="Video Editing">Video Editing</option>
                 </select>
             </div>
-            <div className="overflow-x-auto">
-                <table className="table w-full">
-                    {/* head */}
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Posted By</th>
-                            <th>Summary</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {jobs.map((job, index) => (
-                            <tr key={job._id}>
-                                <th>{index + 1}</th>
-                                <td>{job.title}</td>
-                                <td>{job.category}</td>
-                                <td>{job.postedBy}</td>
-                                <td>{job.summary}</td>
-                                <td>
-                                    <Link to={`/allJobs/${job._id}`} className="btn btn-primary">View Details</Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            {loading ? (
+                <div className="flex justify-center items-center h-64">
+                    <ClipLoader size={50} color={"#123abc"} loading={loading} />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {jobs.map((job) => (
+                        <div key={job._id} className="card bg-base-100 shadow-xl">
+                            {job.coverImage && (
+                                <figure>
+                                    <img src={job.coverImage} alt={job.title} className="h-48 w-full object-cover" />
+                                </figure>
+                            )}
+                            <div className="card-body">
+                                <h2 className="card-title">{job.title}</h2>
+                                <p><strong>Category:</strong> {job.category}</p>
+                                <p><strong>Posted By:</strong> {job.postedBy}</p>
+                                <p className="text-sm text-gray-500">{job.summary}</p>
+                                <div className="card-actions justify-end mt-4">
+                                    <Link to={`/JobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

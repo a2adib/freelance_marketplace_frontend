@@ -3,21 +3,26 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
 
 
 const Home = () => {
 
     const [jobs, setJobs] = useState([]);
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
+        setLoading(true);
         axios.get('http://localhost:3000/jobs')
     .then(res=>{
         setJobs(res.data);
+        setLoading(false);
     })
     .catch(err=>{
         console.log(err);
+        setLoading(false);
     })
 }, []);
 
@@ -67,23 +72,29 @@ const latestJobs = [...jobs].sort((a, b) => {
             {/* Dynamic Section (Latest 6 Jobs) */}
             <div className="container mx-auto my-12">
                 <h2 className="text-3xl font-bold text-center mb-8">Latest Jobs</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {latestJobs.map(job => (
-                        <div key={job._id} className="card w-96 bg-base-100 shadow-xl">
-                            <figure><img src={job.coverImage} alt="Job" /></figure>
-                            <div className="card-body">
-                                <h2 className="card-title">
-                                    {job.title}
-                                    <div className="badge badge-secondary">NEW</div>
-                                </h2>
-                                <p>{job.summary}</p>
-                                <div className="card-actions justify-end">
-                                    <Link to={`/JobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <ClipLoader size={50} color={"#123abc"} loading={loading} />
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {latestJobs.map(job => (
+                            <div key={job._id} className="card w-96 bg-base-100 shadow-xl">
+                                <figure><img src={job.coverImage} alt="Job" /></figure>
+                                <div className="card-body">
+                                    <h2 className="card-title">
+                                        {job.title}
+                                        <div className="badge badge-secondary">NEW</div>
+                                    </h2>
+                                    <p>{job.summary}</p>
+                                    <div className="card-actions justify-end">
+                                        <Link to={`/JobDetails/${job._id}`} className="btn btn-primary">View Details</Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Static Section 1: Top Categories */}
